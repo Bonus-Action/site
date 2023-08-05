@@ -1,36 +1,47 @@
 import { Button } from '@components/Button';
-import Input from '@components/Input';
 import { Fragment, useState } from 'react';
+import DynamicAbility from './Ability';
+import { uuid } from 'uuidv4';
 
 export type Ability = {
+    id: string;
     title: string;
     description: string;
 };
 
 interface IProps {
-    initialAbilities?: Array<Ability>;
-    onFocus: any;
+    initialAbilities?: Record<string, Ability>;
+    onFocus: () => void;
 }
 
 export default function DynamicAbilities({ initialAbilities, onFocus }: IProps) {
-    const [abilities, setAbilities] = useState<Array<Ability>>(initialAbilities || []);
-    console.log({ abilities });
+    const [abilities, setAbilities] = useState<Record<string, Ability>>(initialAbilities || {});
 
     function handleAddAbility() {
-        setAbilities((abilities) => [...abilities, { title: '', description: '' }]);
+        const id = uuid();
+        setAbilities((abilities) => ({ ...abilities, [id]: { id, title: '', description: '' } }));
+    }
+
+    function onChange(ability: Ability) {
+        setAbilities((abilities) => ({
+            ...abilities,
+            [ability.id]: { ...ability },
+        }));
     }
 
     return (
-        <div className="flex flex-wrap">
-            {abilities.map((ability) => (
-                <div className="flex mb-4">
-                    <Input label="Title" value={ability.title} onFocus={onFocus} />
-                    <Input label="Description" value={ability.description} onFocus={onFocus} />
-                </div>
-            ))}
-            {/* <Button variant="primary-ghost" onClick={handleAddAbility}>
+        <section className="flex flex-col">
+            <div className="border-b-primary border-b flex mb-2">
+                <p className="text-lg font-bold mb-1">Abilities</p>
+            </div>
+            <div className="flex-wrap">
+                {Object.entries(abilities).map(([id, ability], i) => (
+                    <DynamicAbility key={id} ability={ability} onFocus={onFocus} onChange={onChange} />
+                ))}
+            </div>
+            <Button variant="primary-ghost" onClick={handleAddAbility} size="small" className="self-start">
                 Add ability
-            </Button> */}
-        </div>
+            </Button>
+        </section>
     );
 }

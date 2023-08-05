@@ -21,16 +21,23 @@ export default function FlipCard({ flip, flipOnHover, front, back }: IProps) {
                     flipOnHover && `group-hover:[transform:rotateY(${flipDegrees}deg)]`,
                 )}
             >
-                <div className="absolute inset-0">
+                <div className="absolute inset-0 [backface-visibility:hidden]">
                     <img
                         className="h-full w-full shadow-md shadow-black/40 object-fill"
                         src="/img/card-maker/bg.png"
                         alt=""
                     />
-                    {flip ? null : front}
+                    {front}
                 </div>
-                <div className="absolute inset-0 h-full w-full px-12 text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden]">
-                    <div className="flex min-h-full flex-col items-center justify-center">{back}</div>
+                <div className="absolute inset-0 [transform:rotateY(180deg)] [backface-visibility:hidden]">
+                    <div className="items-center justify-center">
+                        <img
+                            className="h-full w-full shadow-md shadow-black/40 object-fill"
+                            src="/img/card-maker/bg.png"
+                            alt=""
+                        />
+                        {back}
+                    </div>
                 </div>
             </div>
         </div>

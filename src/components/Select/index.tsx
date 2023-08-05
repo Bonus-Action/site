@@ -29,7 +29,7 @@ export default function Select({ options, label, placeholder }: IProps) {
                     placement="bottom left"
                     className="w-60 rounded-md bg-white shadow-md border border-slate-100 z-1"
                 >
-                    <ListBox className="rounded-md py-1 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+                    <ListBox className="rounded-md py-1 h-60 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
                         {options.map(({ label, value }) => (
                             <Item
                                 key={value}
