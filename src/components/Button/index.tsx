@@ -22,9 +22,10 @@ export const sizeClassName: Record<Size, string> = {
 
 export const defaultButtonClassNames = 'font-bold transition ease-in-out';
 
-export function Button({ type = 'button', children, variant, className, size = 'normal' }: IProps) {
+export function Button({ type = 'button', children, variant, className, size = 'normal', onClick }: IProps) {
     return (
         <button
+            onClick={onClick}
             type={type}
             className={classNames(buttonVariantMap[variant], defaultButtonClassNames, sizeClassName[size], className)}
         >
