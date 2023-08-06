@@ -8,6 +8,12 @@ import DynamicAbilities, { Ability } from '@components/DynamicAbilities';
 import { useMove } from 'react-aria';
 import Checkbox from '@components/Checkbox';
 import Draggable from '@components/Draggable';
+import Modal from '@components/Modal';
+import { DialogTrigger } from 'react-aria-components';
+import { Button } from '@components/Button';
+import ItemGrid from '@components/ItemGrid';
+import { Tabs, TabList, Tab, TabPanel } from 'react-aria-components';
+import { classNames } from '../../lib/classNames';
 
 interface IFrontProps {
     title: ReactElement;
@@ -23,6 +29,7 @@ interface IBackProps {
 
 function Front({ title, image, cardRef }: IFrontProps) {
     const maxX = cardRef?.current?.clientWidth || 28;
+
     return (
         <Fragment>
             {title}
@@ -66,6 +73,7 @@ export default function CardMakerPage() {
     const [flip, setFlip] = useState(false);
     const [title, setTitle] = useState('');
     const [image, setImage] = useState('/img/card-maker/item.png');
+    const [isOpen, setOpen] = useState(false);
     const cardRef = useRef<HTMLDivElement>(null);
     const TitleComponent = <Title title={title} />;
 
@@ -110,45 +118,93 @@ export default function CardMakerPage() {
                 </div>
 
                 <div className="flex-wrap">
-                    <div className="flex">
-                        <FormGroup className="mr-4">
-                            <Input type="text" label="Title" onChange={setTitle} onFocus={flipToFront} />
-                        </FormGroup>
+                    <Tabs
+                        onSelectionChange={(key) => {
+                            if (key === 'general') {
+                                flipToFront();
+                            } else {
+                                flipToBack();
+                            }
+                        }}
+                    >
+                        <TabList aria-label="Card sides" className="flex mb-4">
+                            <Tab
+                                id="general"
+                                className={({ isSelected }) =>
+                                    classNames('p-2 rounded-md', isSelected && 'bg-primary text-white')
+                                }
+                            >
+                                General info
+                            </Tab>
+                            <Tab
+                                id="abilities"
+                                className={({ isSelected }) =>
+                                    classNames('p-2 rounded-md', isSelected && 'bg-primary text-white')
+                                }
+                            >
+                                Abilities
+                            </Tab>
+                        </TabList>
+                        <TabPanel id="general">
+                            <div className="flex">
+                                <FormGroup className="mr-4">
+                                    <Input type="text" label="Title" onChange={setTitle} onFocus={flipToFront} />
+                                </FormGroup>
 
-                        <FormGroup>
-                            <Select options={rarities} label="Rarity" placeholder="Select item rarity" />
-                        </FormGroup>
-                    </div>
+                                <FormGroup>
+                                    <Select options={rarities} label="Rarity" placeholder="Select item rarity" />
+                                </FormGroup>
+                            </div>
 
-                    <FormGroup>
-                        <Select options={itemTypes} label="Item type" placeholder="Select item type" />
-                    </FormGroup>
+                            <div className="flex items-center">
+                                <FormGroup className="mr-4">
+                                    <Select options={itemTypes} label="Item type" placeholder="Select item type" />
+                                </FormGroup>
 
-                    <FormGroup>
-                        <Checkbox label="Requires attunement" />
-                    </FormGroup>
+                                <FormGroup className="mb-0">
+                                    <Button
+                                        variant="primary-ghost"
+                                        size="small"
+                                        className="mt-3"
+                                        onClick={() => setOpen((open) => !open)}
+                                    >
+                                        Pick image
+                                    </Button>
+                                </FormGroup>
+                            </div>
 
-                    <FormGroup>
-                        <DynamicAbilities
-                            onFocus={flipToBack}
-                            initialAbilities={{
-                                'd7c0cf26-41d6-47a3-ad23-0b8fb8bb1254': {
-                                    id: 'd7c0cf26-41d6-47a3-ad23-0b8fb8bb1254',
-                                    title: 'Healthy Diet',
-                                    description:
-                                        'As an action you can make this Cornucopia fill and overflow with enough vegetables and fruits to sustain 5 people for a whole day. This feature can be used only once per day.',
-                                },
-                                'b0b75a7e-2d17-4976-bbc9-a0bb4663c8fa': {
-                                    id: 'b0b75a7e-2d17-4976-bbc9-a0bb4663c8fa',
-                                    title: 'Bountiful Harvest.',
-                                    description:
-                                        'Once per year you can spend an action to also conjure a selection of pumpkin pies, cranberry sauce, sweet potato dishes and a large cooked turkey. 12 medium sized creatures may spend an hour to eat from this buffet. For the next 12 hours they have advantage on Wisdom and Intelligence saving throws and they are immune to being Frightened. Additionally they regain 4d6 hit points and their maximum hit points increase by the same amount for the duration.',
-                                },
-                            }}
-                        />
-                    </FormGroup>
+                            <FormGroup>
+                                <Checkbox label="Requires attunement" />
+                            </FormGroup>
+                        </TabPanel>
+                        <TabPanel id="abilities">
+                            <FormGroup>
+                                <DynamicAbilities
+                                    onFocus={flipToBack}
+                                    initialAbilities={{
+                                        'd7c0cf26-41d6-47a3-ad23-0b8fb8bb1254': {
+                                            id: 'd7c0cf26-41d6-47a3-ad23-0b8fb8bb1254',
+                                            title: 'Healthy Diet',
+                                            description:
+                                                'As an action you can make this Cornucopia fill and overflow with enough vegetables and fruits to sustain 5 people for a whole day. This feature can be used only once per day.',
+                                        },
+                                        'b0b75a7e-2d17-4976-bbc9-a0bb4663c8fa': {
+                                            id: 'b0b75a7e-2d17-4976-bbc9-a0bb4663c8fa',
+                                            title: 'Bountiful Harvest.',
+                                            description:
+                                                'Once per year you can spend an action to also conjure a selection of pumpkin pies, cranberry sauce, sweet potato dishes and a large cooked turkey. 12 medium sized creatures may spend an hour to eat from this buffet. For the next 12 hours they have advantage on Wisdom and Intelligence saving throws and they are immune to being Frightened. Additionally they regain 4d6 hit points and their maximum hit points increase by the same amount for the duration.',
+                                        },
+                                    }}
+                                />
+                            </FormGroup>
+                        </TabPanel>
+                    </Tabs>
                 </div>
             </section>
+
+            <Modal isOpen={isOpen} onOpenChange={(isOpen) => setOpen(isOpen)}>
+                {({ close }) => <ItemGrid />}
+            </Modal>
         </main>
     );
 }

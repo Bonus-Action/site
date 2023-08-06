@@ -31,9 +31,6 @@ export default function DynamicAbilities({ initialAbilities, onFocus }: IProps) 
 
     return (
         <section className="flex flex-col">
-            <div className="border-b-primary border-b flex mb-2">
-                <p className="text-lg font-bold mb-1">Abilities</p>
-            </div>
             <div className="flex-wrap">
                 {Object.entries(abilities).map(([id, ability], i) => (
                     <DynamicAbility key={id} ability={ability} onFocus={onFocus} onChange={onChange} />
