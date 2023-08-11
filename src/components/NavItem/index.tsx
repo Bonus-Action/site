@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { HTMLAttributeAnchorTarget, ReactElement } from 'react';
+import Link from 'next/link';
 
 interface IProps {
     children: ReactElement;

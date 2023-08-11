@@ -1,6 +1,8 @@
-import Label from '@components/Label';
 import { useRef } from 'react';
-import { useTextField, type AriaTextFieldProps } from 'react-aria';
+import { type AriaTextFieldProps, useTextField } from 'react-aria';
+
+import Label from '@components/Label';
+
 import { classNames } from '../../lib/classNames';
 
 interface IProps extends AriaTextFieldProps {

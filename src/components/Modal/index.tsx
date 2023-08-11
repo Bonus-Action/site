@@ -1,5 +1,5 @@
-import { ReactElement, ReactNode } from 'react';
-import { Dialog, DialogTrigger, Modal as ReactAriaModal } from 'react-aria-components';
+import { ReactNode } from 'react';
+import { Dialog, Modal as ReactAriaModal } from 'react-aria-components';
 
 interface IProps {
     children: (props: { close: () => void }) => ReactNode;

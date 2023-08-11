@@ -225,6 +225,11 @@
         animation-duration: 2s;
     }
 
+    .fade-in-faster {
+        animation-name: fade-in;
+        animation-duration: 1000ms;
+    }
+
     .fade-in-down {
         animation-name: fade-in-down;
         animation-duration: 1s;

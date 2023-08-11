@@ -1,6 +1,6 @@
 import Input from '@components/Input';
+
 import { Ability } from '.';
-import { FormEvent } from 'react';
 
 interface IProps {
     ability: Ability;
@@ -11,7 +11,6 @@ interface IProps {
 export default function DynamicAbility({ ability, onChange, onFocus }: IProps) {
     function onTitleChange(value: string) {
         const newAbility: Ability = { ...ability, title: value };
-        console.log({ newAbility });
         onChange(newAbility);
     }
 

@@ -1,15 +1,15 @@
-import Label from '@components/Label';
 import { Fragment } from 'react';
-import { CheckboxProps, Checkbox as ReactAriaCheckbox } from 'react-aria-components';
+import { Checkbox as ReactAriaCheckbox, CheckboxProps } from 'react-aria-components';
+
 import { classNames } from '../../lib/classNames';
 
 interface IProps extends CheckboxProps {
     label: string;
 }
 
-export default function Checkbox({ onChange, label }: IProps) {
+export default function Checkbox({ onChange, label, ...rest }: IProps) {
     return (
-        <ReactAriaCheckbox onChange={onChange} className="flex items-center">
+        <ReactAriaCheckbox {...rest} onChange={onChange} className="flex items-center">
             {({ isSelected, isFocused }) => (
                 <Fragment>
                     <div

@@ -1,9 +1,9 @@
-import twitterIcon from '@public/img/socials/twitter.svg';
+import Link from 'next/link';
+
 import facebookIcon from '@public/img/socials/facebook.svg';
 import instagramIcon from '@public/img/socials/instagram.svg';
 import patreonIcon from '@public/img/socials/patreon.svg';
-import Image from 'next/image';
-import Link from 'next/link';
+import twitterIcon from '@public/img/socials/twitter.svg';
 
 const socials = [
     { Icon: patreonIcon, url: 'https://www.patreon.com/bonusaction', name: 'Patreon' },

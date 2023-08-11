@@ -1,7 +1,8 @@
 import Image from 'next/image';
-import LogoBlack from '@public/img/logo-black.png';
-import { NavItem } from '@components/NavItem';
 import Link from 'next/link';
+
+import { NavItem } from '@components/NavItem';
+import LogoBlack from '@public/img/logo-black.png';
 
 export function Navbar() {
     return (

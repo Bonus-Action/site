@@ -1,7 +1,9 @@
-import { Button } from '@components/Button';
-import { Fragment, useState } from 'react';
-import DynamicAbility from './Ability';
+import { useState } from 'react';
 import { uuid } from 'uuidv4';
+
+import { Button } from '@components/Button';
+
+import DynamicAbility from './Ability';
 
 export type Ability = {
     id: string;
@@ -32,7 +34,7 @@ export default function DynamicAbilities({ initialAbilities, onFocus }: IProps) 
     return (
         <section className="flex flex-col">
             <div className="flex-wrap">
-                {Object.entries(abilities).map(([id, ability], i) => (
+                {Object.entries(abilities).map(([id, ability]) => (
                     <DynamicAbility key={id} ability={ability} onFocus={onFocus} onChange={onChange} />
                 ))}
             </div>

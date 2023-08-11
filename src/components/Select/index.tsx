@@ -1,16 +1,19 @@
+import { Key } from 'react';
 import { Button, Item, ListBox, Popover, Select as ReactAriaSelect, SelectValue } from 'react-aria-components';
+
 import Label from '@components/Label';
 
 interface IProps {
     options: Array<{ label: string; value: string }>;
     label: string;
     placeholder?: string;
+    onChange?: (key: Key) => void;
 }
 
-export default function Select({ options, label, placeholder }: IProps) {
+export default function Select({ options, label, placeholder, onChange }: IProps) {
     return (
         <div className="relative w-60">
-            <ReactAriaSelect placeholder={placeholder}>
+            <ReactAriaSelect placeholder={placeholder} onSelectionChange={onChange} items={options}>
                 <Label>{label}</Label>
                 <Button className="flex text-base justify-between items-center w-full rounded-md border border-slate-200 bg-white px-3 py-2">
                     <SelectValue />
@@ -32,8 +35,10 @@ export default function Select({ options, label, placeholder }: IProps) {
                     <ListBox className="rounded-md py-1 h-60 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
                         {options.map(({ label, value }) => (
                             <Item
-                                key={value}
-                                value={{ value }}
+                                id={label}
+                                key={label}
+                                textValue={label}
+                                value={{ value, label }}
                                 className="text-gray-900 select-none cursor-pointer relative py-2 pl-3 pr-9 focus:outline-none hover:bg-primary-light hover:text-white focus:bg-primary focus:text-white"
                             >
                                 {label}

@@ -1,5 +1,6 @@
-import SocialButtons from '@components/SocialButtons';
 import Link from 'next/link';
+
+import SocialButtons from '@components/SocialButtons';
 
 export function Footer() {
     return (
