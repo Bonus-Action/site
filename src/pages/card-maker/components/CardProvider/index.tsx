@@ -1,9 +1,10 @@
-import { createContext, Key, ReactElement, useEffect, useRef, useState } from 'react';
+import { createContext, Key, ReactElement, useEffect, useReducer, useRef } from 'react';
 
 import { Ability } from '@pages/card-maker/components/DynamicAbilities';
 
-const MIN_X = 25;
-const MIN_Y = 30;
+import { CardType } from '../../../../components/FlipCard';
+
+import { cardReducer, initialState, MIN_X, MIN_Y } from './cardReducer';
 
 export const CardContext = createContext<CardContextType>({
     abilities: {},
@@ -23,6 +24,8 @@ export const CardContext = createContext<CardContextType>({
     cardSide: 'front',
     cardRef: { current: null },
     safeBox: { maxX: 0, maxY: 0, minX: MIN_X, minY: MIN_Y },
+    cardType: 'poker',
+    changeCardType: () => {},
 });
 
 interface IProps {
@@ -33,7 +36,7 @@ export type CardContextType = {
     abilities: Record<string, Ability>;
     title: string;
     image: string;
-    onTabChange: (key: Key) => void;
+    onTabChange: (key: CardSide) => void;
     setTitle: (value: string) => void;
     flipToFront: () => void;
     flipToBack: () => void;
@@ -47,60 +50,77 @@ export type CardContextType = {
     cardSide: CardSide;
     cardRef: React.RefObject<HTMLDivElement>;
     safeBox: SafeBox;
+    cardType: CardType;
+    changeCardType: (value: CardType) => void;
 };
 
 export type CardSide = 'front' | 'back';
 export type SafeBox = { maxX: number; maxY: number; minX: number; minY: number };
 
+export type State = {
+    abilities: Record<string, Ability>;
+    title: string;
+    image: string;
+    rarity: Key | null;
+    itemType: Key | null;
+    requiresAttunement: boolean;
+    cardSide: CardSide;
+    safeBox: SafeBox;
+    cardType: CardType;
+};
+
 export default function CardProvider({ children }: IProps) {
-    const [abilities] = useState<Record<string, Ability>>({});
-    const [title, setTitle] = useState<string>('');
-    const [image, setImage] = useState<string>('');
-    const [rarity, setRarity] = useState<Key | null>(null);
-    const [itemType, setItemType] = useState<Key | null>(null);
-    const [requiresAttunement, setRequiresAttunement] = useState<boolean>(false);
-    const [cardSide, setCardSide] = useState<CardSide>('front');
+    const [state, dispatch] = useReducer(cardReducer, initialState);
     const cardRef = useRef<HTMLDivElement>(null);
-    const [safeBox, setSafeBox] = useState<SafeBox>({ maxX: 0, maxY: 0, minX: MIN_X, minY: MIN_Y });
 
-    /**
-     * Flip the card to the back side.
-     */
-    function flipToBack() {
-        if (cardSide !== 'back') setCardSide('back');
-    }
+    useEffect(() => {
+        if (!cardRef.current) return;
+        const { width, height } = cardRef.current.getBoundingClientRect();
+        const safeBox = { maxX: width - MIN_X, maxY: height - 10, minX: MIN_X, minY: MIN_Y };
+        dispatch({ type: 'SET_SAFE_BOX', safeBox });
+    }, []);
 
-    /**
-     * Flip the card to the front side.
-     */
-    function flipToFront() {
-        if (cardSide !== 'front') setCardSide('front');
-    }
+    const { abilities, title, image, rarity, itemType, requiresAttunement, cardSide, safeBox, cardType } = state;
 
-    /**
-     * Handle change of tab.
-     */
-    function onTabChange(key: Key) {
-        if (key === 'general') {
-            flipToFront();
-        } else if (key === 'abilities') {
-            flipToBack();
+    function onTabChange(key: CardSide) {
+        if (key === 'front') {
+            dispatch({ type: 'FLIP_TO_FRONT' });
+        } else if (key === 'back') {
+            dispatch({ type: 'FLIP_TO_BACK' });
         }
     }
 
-    /**
-     * Get the safe box for the card.
-     * Returns the minumum and maximum values for the x and y axis.
-     */
-    function getSafeBox() {
-        if (!cardRef.current) return { maxX: 0, maxY: 0 };
-        const { width, height } = cardRef.current.getBoundingClientRect();
-        return setSafeBox({ maxX: width - MIN_X, maxY: height - 10, minX: MIN_X, minY: MIN_Y });
+    function setTitle(value: string) {
+        dispatch({ type: 'SET_TITLE', title: value });
     }
 
-    useEffect(() => {
-        getSafeBox();
-    }, []);
+    function setImage(value: string) {
+        dispatch({ type: 'SET_IMAGE', image: value });
+    }
+
+    function setRarity(value: Key | null) {
+        dispatch({ type: 'SET_RARITY', rarity: value });
+    }
+
+    function setItemType(value: Key | null) {
+        dispatch({ type: 'SET_ITEM_TYPE', itemType: value });
+    }
+
+    function setRequiresAttunement(value: boolean) {
+        dispatch({ type: 'SET_REQUIRES_ATTUNEMENT', requiresAttunement: value });
+    }
+
+    function flipToFront() {
+        dispatch({ type: 'FLIP_TO_FRONT' });
+    }
+
+    function flipToBack() {
+        dispatch({ type: 'FLIP_TO_BACK' });
+    }
+
+    function changeCardType(value: CardType) {
+        dispatch({ type: 'SET_CARD_TYPE', cardType: value });
+    }
 
     return (
         <CardContext.Provider
@@ -122,6 +142,8 @@ export default function CardProvider({ children }: IProps) {
                 rarity,
                 setRarity,
                 safeBox,
+                cardType,
+                changeCardType,
             }}
         >
             {children}

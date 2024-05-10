@@ -11,6 +11,7 @@ import DynamicAbilities from '@pages/card-maker/components/DynamicAbilities';
 import ItemGrid from '@pages/card-maker/components/ItemGrid';
 
 import { itemTypes, rarities } from '../../../../lib/cardItemTypes';
+import { characterClasses } from '../../../../lib/classes';
 import { classNames } from '../../../../lib/classNames';
 import { CardContext } from '../CardProvider';
 
@@ -32,23 +33,23 @@ export default function CardForm() {
             <Tabs onSelectionChange={onTabChange}>
                 <TabList aria-label="Card sides" className="flex mb-4">
                     <Tab
-                        id="general"
+                        id="front"
                         className={({ isSelected }) =>
                             classNames('p-2 rounded-md', isSelected && 'bg-primary text-white')
                         }
                     >
-                        General info
+                        Front
                     </Tab>
                     <Tab
-                        id="abilities"
+                        id="back"
                         className={({ isSelected }) =>
                             classNames('p-2 rounded-md', isSelected && 'bg-primary text-white')
                         }
                     >
-                        Abilities
+                        Back
                     </Tab>
                 </TabList>
-                <TabPanel id="general">
+                <TabPanel id="front">
                     <div className="flex">
                         <FormGroup className="mr-4">
                             <Input type="text" label="Title" onChange={setTitle} value={title} />
@@ -96,26 +97,27 @@ export default function CardForm() {
                             isSelected={requiresAttunement}
                         />
                     </FormGroup>
+                    <FormGroup className="ml-4">
+                        {requiresAttunement ? (
+                            <Select
+                                options={[
+                                    { label: '-', value: '-' },
+                                    ...characterClasses.map((characterClass) => ({
+                                        label: characterClass,
+                                        value: characterClass,
+                                    })),
+                                ]}
+                                label="By a"
+                                placeholder="Select class"
+                            />
+                        ) : (
+                            <p>Custom</p>
+                        )}
+                    </FormGroup>
                 </TabPanel>
-                <TabPanel id="abilities">
+                <TabPanel id="back">
                     <FormGroup>
-                        <DynamicAbilities
-                            onFocus={flipToBack}
-                            initialAbilities={{
-                                'd7c0cf26-41d6-47a3-ad23-0b8fb8bb1254': {
-                                    id: 'd7c0cf26-41d6-47a3-ad23-0b8fb8bb1254',
-                                    title: 'Healthy Diet',
-                                    description:
-                                        'As an action you can make this Cornucopia fill and overflow with enough vegetables and fruits to sustain 5 people for a whole day. This feature can be used only once per day.',
-                                },
-                                'b0b75a7e-2d17-4976-bbc9-a0bb4663c8fa': {
-                                    id: 'b0b75a7e-2d17-4976-bbc9-a0bb4663c8fa',
-                                    title: 'Bountiful Harvest.',
-                                    description:
-                                        'Once per year you can spend an action to also conjure a selection of pumpkin pies, cranberry sauce, sweet potato dishes and a large cooked turkey. 12 medium sized creatures may spend an hour to eat from this buffet. For the next 12 hours they have advantage on Wisdom and Intelligence saving throws and they are immune to being Frightened. Additionally they regain 4d6 hit points and their maximum hit points increase by the same amount for the duration.',
-                                },
-                            }}
-                        />
+                        <DynamicAbilities onFocus={flipToBack} />
                     </FormGroup>
                 </TabPanel>
             </Tabs>

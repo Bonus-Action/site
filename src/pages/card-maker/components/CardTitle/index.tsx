@@ -1,14 +1,16 @@
 import { Fragment, useContext } from 'react';
 
-import Draggable from '@components/Draggable';
-
 import { CardContext } from '../CardProvider';
 
 export default function CardTitle() {
     const { safeBox, title, requiresAttunement, itemType, cardSide } = useContext(CardContext);
+    const { minX, maxX, minY } = safeBox;
 
     return (
-        <Draggable {...safeBox} initialPos={{ x: safeBox.minX, y: safeBox.minY }}>
+        <div
+            style={{ width: maxX - minX, maxWidth: maxX - minX, top: minY, left: minX, right: maxX }}
+            className="absolute overflow-hidden whitespace-wrap"
+        >
             <p className="text-center font-headings text-2xl text-neutral-800 small-caps -mb-1 fade-in-faster">
                 {title}
             </p>
@@ -21,6 +23,6 @@ export default function CardTitle() {
                     </p>
                 </Fragment>
             ) : null}
-        </Draggable>
+        </div>
     );
 }
