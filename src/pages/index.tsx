@@ -1,10 +1,11 @@
-import type { InferGetStaticPropsType, GetStaticProps } from 'next';
-import { Header } from '@components/Header';
 import Image from 'next/image';
-import BAIcon from '@public/img/ba-icon.png';
-import { buttonVariantMap, defaultButtonClassNames, sizeClassName } from '@components/Button';
-import SocialButtons from '@components/SocialButtons';
 import Link from 'next/link';
+
+import { buttonVariantMap, defaultButtonClassNames, sizeClassName } from '@components/Button';
+import { Header } from '@components/Header';
+import SocialButtons from '@components/SocialButtons';
+import BAIcon from '@public/img/ba-icon.png';
+
 import { classNames } from '../lib/classNames';
 
 export default function Home() {

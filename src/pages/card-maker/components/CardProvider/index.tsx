@@ -2,8 +2,6 @@ import { createContext, Key, ReactElement, useEffect, useRef, useState } from 'r
 
 import { Ability } from '@pages/card-maker/components/DynamicAbilities';
 
-import { itemTypes, rarities } from '../../../../lib/cardItemTypes';
-
 const MIN_X = 25;
 const MIN_Y = 30;
 
@@ -41,11 +39,11 @@ export type CardContextType = {
     flipToBack: () => void;
     requiresAttunement: boolean;
     setRequiresAttunement: (value: boolean) => void;
-    itemType: (typeof itemTypes)[number] | null;
-    setItemType: (value: (typeof itemTypes)[number] | null) => void;
+    itemType: Key | null;
+    setItemType: (value: Key | null) => void;
     setImage: (value: string) => void;
-    rarity: (typeof rarities)[number] | null;
-    setRarity: (value: (typeof rarities)[number] | null) => void;
+    rarity: Key | null;
+    setRarity: (value: Key | null) => void;
     cardSide: CardSide;
     cardRef: React.RefObject<HTMLDivElement>;
     safeBox: SafeBox;
@@ -55,16 +53,16 @@ export type CardSide = 'front' | 'back';
 export type SafeBox = { maxX: number; maxY: number; minX: number; minY: number };
 
 export default function CardProvider({ children }: IProps) {
-    const [abilities, setAbilities] = useState<Record<string, Ability>>({});
+    const [abilities] = useState<Record<string, Ability>>({});
     const [title, setTitle] = useState<string>('');
     const [image, setImage] = useState<string>('');
-    const [rarity, setRarity] = useState<(typeof rarities)[number] | null>(null);
-    const [itemType, setItemType] = useState<(typeof itemTypes)[number] | null>(null);
+    const [rarity, setRarity] = useState<Key | null>(null);
+    const [itemType, setItemType] = useState<Key | null>(null);
     const [requiresAttunement, setRequiresAttunement] = useState<boolean>(false);
     const [cardSide, setCardSide] = useState<CardSide>('front');
     const cardRef = useRef<HTMLDivElement>(null);
     const [safeBox, setSafeBox] = useState<SafeBox>({ maxX: 0, maxY: 0, minX: MIN_X, minY: MIN_Y });
-    console.log({ rarity });
+
     /**
      * Flip the card to the back side.
      */

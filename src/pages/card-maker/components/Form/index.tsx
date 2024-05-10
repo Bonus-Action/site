@@ -26,7 +26,7 @@ export default function CardForm() {
         requiresAttunement,
     } = useContext(CardContext);
     const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
-    console.log({ requiresAttunement });
+
     return (
         <div className="flex-wrap">
             <Tabs onSelectionChange={onTabChange}>

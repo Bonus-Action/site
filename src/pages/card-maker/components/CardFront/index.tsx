@@ -13,7 +13,7 @@ export default function CardFront() {
     return (
         <Fragment>
             <CardBackground />
-            <CardTitle title={title} />
+            <CardTitle />
             {image ? (
                 <Draggable maxX={safeBox.maxX} maxY={safeBox.maxY}>
                     <figure>
