@@ -19,10 +19,10 @@ export default function DynamicAbility({ ability, onChange, onFocus }: IProps) {
         onChange(newAbility);
     }
 
-    return (
+    return ability ? (
         <div className="flex mb-4">
             <Input label="Title" value={ability.title} onFocus={onFocus} onChange={onTitleChange} className="mr-4" />
             <Input label="Description" value={ability.description} onFocus={onFocus} onChange={onDescriptionChange} />
         </div>
-    );
+    ) : null;
 }

@@ -10,7 +10,7 @@ export type ItemType = { imageUrl: string; title: string };
 export default function Item({ item }: IProps) {
     const [isLoaded, setIsLoaded] = useState(false);
 
-    return (
+    return item ? (
         <div className="bg-white flex flex-col mb-2 mr-2 relative shadow-md">
             <div className="p-4 cursor-pointer">
                 <Image
@@ -25,5 +25,5 @@ export default function Item({ item }: IProps) {
                 {!isLoaded ? <p>Loading</p> : <p className="mb-0 text-sm">{item.title}</p>}
             </div>
         </div>
-    );
+    ) : null;
 }
