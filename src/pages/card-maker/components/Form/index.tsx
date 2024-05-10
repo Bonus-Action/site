@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import { Tab, TabList, TabPanel, Tabs } from 'react-aria-components';
 
 import { Button } from '@components/Button';
@@ -10,6 +10,7 @@ import Select from '@components/Select';
 import DynamicAbilities from '@pages/card-maker/components/DynamicAbilities';
 import ItemGrid from '@pages/card-maker/components/ItemGrid';
 
+import { GenerateCardPdfData } from '../../../../../netlify/functions/card-maker-pdf/card-maker-pdf';
 import { itemTypes, rarities } from '../../../../lib/cardItemTypes';
 import { characterClasses } from '../../../../lib/classes';
 import { classNames } from '../../../../lib/classNames';
@@ -25,11 +26,50 @@ export default function CardForm() {
         setItemType,
         setRequiresAttunement,
         requiresAttunement,
+        rarity,
+        itemType,
+        safeBox,
     } = useContext(CardContext);
     const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
 
+    function pxToMm(px: number) {
+        return px * 0.2645833333;
+    }
+
+    async function handleCreateCard(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const data: GenerateCardPdfData = {
+            title: {
+                width: safeBox.maxX - safeBox.minX,
+                x: pxToMm(safeBox.minX),
+                height: 0,
+                y: pxToMm(safeBox.minY),
+                text: title,
+            },
+        };
+
+        const blob = await fetch('/.netlify/functions/card-maker-pdf', {
+            method: 'POST',
+            body: JSON.stringify(data),
+        }).then((res) => res.blob());
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const link = document.createElement('a');
+            link.href = reader.result as string;
+            link.download = title;
+
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+        };
+
+        reader.readAsDataURL(blob);
+    }
+
     return (
-        <div className="flex-wrap">
+        <form onSubmit={handleCreateCard} className="flex-wrap">
             <Tabs onSelectionChange={onTabChange}>
                 <TabList aria-label="Card sides" className="flex mb-4">
                     <Tab
@@ -52,7 +92,7 @@ export default function CardForm() {
                 <TabPanel id="front">
                     <div className="flex">
                         <FormGroup className="mr-4">
-                            <Input type="text" label="Title" onChange={setTitle} value={title} />
+                            <Input type="text" label="Title" onChange={setTitle} value={title} isRequired />
                         </FormGroup>
 
                         <FormGroup>
@@ -120,11 +160,14 @@ export default function CardForm() {
                         <DynamicAbilities onFocus={flipToBack} />
                     </FormGroup>
                 </TabPanel>
+                <Button variant="primary" type="submit">
+                    Create card
+                </Button>
             </Tabs>
 
             <Modal isOpen={isImagePickerOpen} onOpenChange={(isOpen) => setIsImagePickerOpen(isOpen)}>
                 {({ close }) => <ItemGrid close={close} />}
             </Modal>
-        </div>
+        </form>
     );
 }

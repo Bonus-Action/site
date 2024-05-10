@@ -1,0 +1,22 @@
+{
+    "name": "hello-world",
+    "version": "1.0.0",
+    "description": "netlify functions:create - hello world in typescript",
+    "main": "card-maker-pdf.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "netlify",
+        "serverless",
+        "typescript"
+    ],
+    "author": "Netlify",
+    "license": "MIT",
+    "dependencies": {
+        "@netlify/functions": "2.6.3",
+        "@types/node": "14.0.0",
+        "jspdf": "2.5.1",
+        "typescript": "5.4.5"
+    }
+}
