@@ -15,36 +15,27 @@ import { itemTypes, rarities } from '../../../../lib/cardItemTypes';
 import { characterClasses } from '../../../../lib/classes';
 import { classNames } from '../../../../lib/classNames';
 import { CardContext } from '../CardProvider';
+import { MIN_X, MIN_Y } from '../CardProvider/cardReducer';
 
 export default function CardForm() {
-    const {
-        onTabChange,
-        setTitle,
-        title,
-        flipToBack,
-        setRarity,
-        setItemType,
-        setRequiresAttunement,
-        requiresAttunement,
-        rarity,
-        itemType,
-        safeBox,
-    } = useContext(CardContext);
+    const { onTabChange, title, requiresAttunement, dispatch } = useContext(CardContext);
     const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
-
-    function pxToMm(px: number) {
-        return px * 0.2645833333;
-    }
 
     async function handleCreateCard(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
         const data: GenerateCardPdfData = {
+            card: {
+                minX: MIN_X,
+                minY: MIN_Y,
+            },
             title: {
-                width: safeBox.maxX - safeBox.minX,
-                x: pxToMm(safeBox.minX),
-                height: 0,
-                y: pxToMm(safeBox.minY),
-                text: title,
+                text: title.text,
+                x: title.x,
+                y: title.y,
+                width: title.width,
+                height: title.height,
+                fontSize: title.fontSize,
             },
         };
 
@@ -57,7 +48,7 @@ export default function CardForm() {
         reader.onload = () => {
             const link = document.createElement('a');
             link.href = reader.result as string;
-            link.download = title;
+            link.download = title.text;
 
             document.body.appendChild(link);
             link.click();
@@ -92,7 +83,12 @@ export default function CardForm() {
                 <TabPanel id="front">
                     <div className="flex">
                         <FormGroup className="mr-4">
-                            <Input type="text" label="Title" onChange={setTitle} value={title} isRequired />
+                            <Input
+                                type="text"
+                                label="Title"
+                                onChange={(value) => dispatch({ type: 'SET_TITLE', payload: { text: value } })}
+                                value={title.text}
+                            />
                         </FormGroup>
 
                         <FormGroup>
@@ -100,7 +96,7 @@ export default function CardForm() {
                                 options={rarities.map((rarity) => ({ label: rarity, value: rarity }))}
                                 label="Rarity"
                                 placeholder="Select item rarity"
-                                onChange={setRarity}
+                                onChange={(value) => dispatch({ type: 'SET_RARITY', payload: { rarity: value } })}
                             />
                         </FormGroup>
                     </div>
@@ -114,7 +110,7 @@ export default function CardForm() {
                                 }))}
                                 label="Item type"
                                 placeholder="Select item type"
-                                onChange={setItemType}
+                                onChange={(value) => dispatch({ type: 'SET_ITEM_TYPE', payload: { itemType: value } })}
                             />
                         </FormGroup>
 
@@ -133,8 +129,10 @@ export default function CardForm() {
                     <FormGroup>
                         <Checkbox
                             label="Requires attunement"
-                            onChange={setRequiresAttunement}
                             isSelected={requiresAttunement}
+                            onChange={(value) =>
+                                dispatch({ type: 'SET_REQUIRES_ATTUNEMENT', payload: { requiresAttunement: value } })
+                            }
                         />
                     </FormGroup>
                     <FormGroup className="ml-4">
@@ -157,7 +155,7 @@ export default function CardForm() {
                 </TabPanel>
                 <TabPanel id="back">
                     <FormGroup>
-                        <DynamicAbilities onFocus={flipToBack} />
+                        <DynamicAbilities />
                     </FormGroup>
                 </TabPanel>
                 <Button variant="primary" type="submit">

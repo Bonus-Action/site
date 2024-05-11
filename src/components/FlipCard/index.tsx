@@ -6,20 +6,19 @@ import { classNames } from '../../lib/classNames';
 
 interface IProps {
     cardSide?: CardSide;
-    front?: ReactElement;
-    back?: ReactElement;
+    front?: () => ReactElement;
+    back?: () => ReactElement;
     type?: CardType;
 }
 
 export type CardType = 'poker' | 'tarot';
 
-export default function FlipCard({ cardSide, front, back, type = 'poker' }: IProps) {
+export default function FlipCard({ cardSide, front: Front, back: Back, type = 'poker' }: IProps) {
     return (
         <div
             className={classNames(
                 'relative group [perspective:1000px]',
-                // Size x 1.5
-                type === 'tarot' ? `w-[105mm] h-[180mm]` : `w-[96mm] h-[133mm]`,
+                type === 'tarot' ? `w-[70mm] h-[120mm]` : `w-[64mm] h-[89mm]`,
             )}
         >
             <div
@@ -28,9 +27,9 @@ export default function FlipCard({ cardSide, front, back, type = 'poker' }: IPro
                     cardSide === 'front' && 'motion-safe:[transform:rotateY(180deg)]',
                 )}
             >
-                <div className="absolute inset-0 [backface-visibility:hidden]">{front}</div>
+                <div className="absolute inset-0 [backface-visibility:hidden]">{Front ? <Front /> : null}</div>
                 <div className="absolute inset-0 motion-safe:[transform:rotateY(180deg)] [backface-visibility:hidden]">
-                    <div className="items-center justify-center">{back}</div>
+                    <div className="items-center justify-center">{Back ? <Back /> : null}</div>
                 </div>
             </div>
         </div>

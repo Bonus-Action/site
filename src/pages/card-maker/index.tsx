@@ -16,7 +16,7 @@ function CardMakerPageInner() {
 
             <section className="flex">
                 <div className="mr-8" ref={cardRef}>
-                    <FlipCard front={<CardFront />} back={<CardBack />} cardSide={cardSide} type={cardType} />
+                    <FlipCard front={CardFront} back={CardBack} cardSide={cardSide} type={cardType} />
                 </div>
                 <CardForm />
             </section>

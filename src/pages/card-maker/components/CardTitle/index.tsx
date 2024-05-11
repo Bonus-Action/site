@@ -1,28 +1,51 @@
-import { Fragment, useContext } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
+import { debounce } from '../../../../lib/debounce';
 import { CardContext } from '../CardProvider';
 
 export default function CardTitle() {
-    const { safeBox, title, requiresAttunement, itemType, cardSide } = useContext(CardContext);
-    const { minX, maxX, minY } = safeBox;
+    const ref = useRef<HTMLDivElement>(null);
+    const { safeBox, title, dispatch } = useContext(CardContext);
+    const { minX, maxX, minY, maxY } = safeBox;
+    const [width, setWidth] = useState(0);
+
+    function handleTitleChange() {
+        if (!ref.current) return;
+
+        const style = window.getComputedStyle(ref.current, null);
+        const fontSize = parseFloat(style.getPropertyValue('font-size'));
+
+        const calcRegex = /calc\((.*?)\)/;
+        const match = ref.current.style.left.match(calcRegex);
+
+        const x = parseInt(match?.[1] || '0', 10);
+        const y = parseInt(ref.current.style.top, 10);
+        const width = parseInt(ref.current.style.width, 10);
+        const height = ref.current.getBoundingClientRect().height;
+
+        setWidth(ref.current.getBoundingClientRect().width);
+
+        dispatch({ type: 'SET_TITLE', payload: { x, y, width, height, fontSize } });
+    }
+
+    const debouncedHandleTitleChange = debounce(handleTitleChange, 500);
+
+    useEffect(() => {
+        debouncedHandleTitleChange();
+    }, [title.text, debouncedHandleTitleChange]);
 
     return (
-        <div
-            style={{ width: maxX - minX, maxWidth: maxX - minX, top: minY, left: minX, right: maxX }}
-            className="absolute overflow-hidden whitespace-wrap"
+        <p
+            ref={ref}
+            style={{
+                maxHeight: maxY - minY,
+                maxWidth: maxX - minX,
+                top: minY,
+                left: `calc((64mm / 2) - ${width / 2}px)`,
+            }}
+            className="text-center font-headings text-xl text-neutral-800 small-caps -mb-1 fade-in-faster absolute whitespace-wrap break-words overflow-hidden small-caps"
         >
-            <p className="text-center font-headings text-2xl text-neutral-800 small-caps -mb-1 fade-in-faster">
-                {title}
-            </p>
-            {cardSide === 'back' ? (
-                <Fragment>
-                    <p className="text-center font-body text-sm text-neutral-800 fade-in-faster">
-                        {itemType}
-
-                        {requiresAttunement ? <span className="inline-block ml-1">(Requires attunement)</span> : null}
-                    </p>
-                </Fragment>
-            ) : null}
-        </div>
+            {title.text}
+        </p>
     );
 }
