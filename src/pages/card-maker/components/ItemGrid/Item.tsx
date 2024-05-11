@@ -1,18 +1,27 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
+import { useCardProvider } from '../../hooks/useCardProvider';
+
 interface IProps {
     item: ItemType;
+    onClose: () => void;
 }
 
 export type ItemType = { imageUrl: string; title: string };
 
-export default function Item({ item }: IProps) {
+export default function Item({ item, onClose }: IProps) {
+    const { dispatch } = useCardProvider();
     const [isLoaded, setIsLoaded] = useState(false);
 
-    return item ? (
+    function handleOnClick() {
+        dispatch({ type: 'SET_IMAGE', payload: { image: item.imageUrl } });
+        onClose();
+    }
+
+    return (
         <div className="bg-white flex flex-col mb-2 mr-2 relative shadow-md">
-            <div className="p-4 cursor-pointer">
+            <button type="button" className="p-4" onClick={handleOnClick}>
                 <Image
                     src={item.imageUrl}
                     alt={item.title}
@@ -23,7 +32,7 @@ export default function Item({ item }: IProps) {
                     onLoad={() => setIsLoaded(true)}
                 />
                 {!isLoaded ? <p>Loading</p> : <p className="mb-0 text-sm">{item.title}</p>}
-            </div>
+            </button>
         </div>
-    ) : null;
+    );
 }

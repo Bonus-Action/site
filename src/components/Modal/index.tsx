@@ -12,7 +12,7 @@ export default function Modal({ children, isOpen, onOpenChange }: IProps) {
         <ReactAriaModal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            isDismissable={true}
+            isDismissable
             className="fixed top-0 left-0 h-full w-full flex justify-center items-center bg-black bg-opacity-50 z-20"
         >
             <Dialog className="shadow-md rounded-md bg-slate-50 w-3/4 h-5/6 overflow-auto p-8">{children}</Dialog>

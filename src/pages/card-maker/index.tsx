@@ -1,14 +1,13 @@
-import { useContext } from 'react';
-
 import FlipCard from '@components/FlipCard';
 
 import CardBack from './components/CardBack';
 import CardFront from './components/CardFront';
-import CardProvider, { CardContext } from './components/CardProvider';
+import CardProvider from './components/CardProvider';
 import CardForm from './components/Form';
+import { useCardProvider } from './hooks/useCardProvider';
 
 function CardMakerPageInner() {
-    const { cardSide, cardRef, cardType } = useContext(CardContext);
+    const { cardSide, cardRef, cardType } = useCardProvider();
 
     return (
         <main className="container mx-auto py-24">

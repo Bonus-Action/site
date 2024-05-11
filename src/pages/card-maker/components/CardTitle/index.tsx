@@ -1,11 +1,10 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { debounce } from '../../../../lib/debounce';
-import { CardContext } from '../CardProvider';
+import { useCardProvider } from '../../hooks/useCardProvider';
 
 export default function CardTitle() {
     const ref = useRef<HTMLDivElement>(null);
-    const { safeBox, title, dispatch } = useContext(CardContext);
+    const { safeBox, title, dispatch } = useCardProvider();
     const { minX, maxX, minY, maxY } = safeBox;
     const [width, setWidth] = useState(0);
 
@@ -28,11 +27,9 @@ export default function CardTitle() {
         dispatch({ type: 'SET_TITLE', payload: { x, y, width, height, fontSize } });
     }
 
-    const debouncedHandleTitleChange = debounce(handleTitleChange, 500);
-
     useEffect(() => {
-        debouncedHandleTitleChange();
-    }, [title.text, debouncedHandleTitleChange]);
+        handleTitleChange();
+    }, [title.text]);
 
     return (
         <p

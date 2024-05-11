@@ -24,7 +24,7 @@ export default function FlipCard({ cardSide, front: Front, back: Back, type = 'p
             <div
                 className={classNames(
                     'h-full w-full shadow-xl transition-all duration-500 [transform-style:preserve-3d]',
-                    cardSide === 'front' && 'motion-safe:[transform:rotateY(180deg)]',
+                    cardSide === 'back' && 'motion-safe:[transform:rotateY(180deg)]',
                 )}
             >
                 <div className="absolute inset-0 [backface-visibility:hidden]">{Front ? <Front /> : null}</div>

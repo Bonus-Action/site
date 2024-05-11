@@ -1,5 +1,5 @@
-import { FormEvent, useContext, useState } from 'react';
-import { Tab, TabList, TabPanel, Tabs } from 'react-aria-components';
+import { FormEvent, useState } from 'react';
+import { DialogTrigger, Tab, TabList, TabPanel, Tabs } from 'react-aria-components';
 
 import { Button } from '@components/Button';
 import Checkbox from '@components/Checkbox';
@@ -14,11 +14,11 @@ import { GenerateCardPdfData } from '../../../../../netlify/functions/card-maker
 import { itemTypes, rarities } from '../../../../lib/cardItemTypes';
 import { characterClasses } from '../../../../lib/classes';
 import { classNames } from '../../../../lib/classNames';
-import { CardContext } from '../CardProvider';
+import { useCardProvider } from '../../hooks/useCardProvider';
 import { MIN_X, MIN_Y } from '../CardProvider/cardReducer';
 
 export default function CardForm() {
-    const { onTabChange, title, requiresAttunement, dispatch } = useContext(CardContext);
+    const { onTabChange, title, requiresAttunement, dispatch } = useCardProvider();
     const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
 
     async function handleCreateCard(e: FormEvent<HTMLFormElement>) {
@@ -115,14 +115,16 @@ export default function CardForm() {
                         </FormGroup>
 
                         <FormGroup className="mb-0">
-                            <Button
-                                variant="primary-ghost"
-                                size="small"
-                                className="mt-3"
-                                onClick={() => setIsImagePickerOpen((open) => !open)}
-                            >
-                                Pick image
-                            </Button>
+                            <DialogTrigger>
+                                <Button
+                                    variant="primary-ghost"
+                                    size="small"
+                                    className="mt-3"
+                                    onClick={() => setIsImagePickerOpen((open) => !open)}
+                                >
+                                    Pick image
+                                </Button>
+                            </DialogTrigger>
                         </FormGroup>
                     </div>
 
@@ -163,8 +165,15 @@ export default function CardForm() {
                 </Button>
             </Tabs>
 
-            <Modal isOpen={isImagePickerOpen} onOpenChange={(isOpen) => setIsImagePickerOpen(isOpen)}>
-                {({ close }) => <ItemGrid close={close} />}
+            <Modal isOpen={isImagePickerOpen} onOpenChange={setIsImagePickerOpen}>
+                {({ close }) => (
+                    <ItemGrid
+                        close={() => {
+                            setIsImagePickerOpen(false);
+                            close();
+                        }}
+                    />
+                )}
             </Modal>
         </form>
     );

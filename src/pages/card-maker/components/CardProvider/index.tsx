@@ -7,20 +7,7 @@ import { CardType } from '../../../../components/FlipCard';
 
 import { CardAction, cardReducer, initialState, MIN_X, MIN_Y } from './cardReducer';
 
-export const CardContext = createContext<CardContextType>({
-    abilities: {},
-    title: { text: '', x: 0, y: 0, width: 0, height: 0, fontSize: 24 },
-    image: '',
-    onTabChange: () => {},
-    requiresAttunement: false,
-    itemType: null,
-    rarity: null,
-    cardSide: 'front',
-    cardRef: { current: null },
-    safeBox: { maxX: 0, maxY: 0, minX: MIN_X, minY: MIN_Y },
-    cardType: 'poker',
-    dispatch: () => {},
-});
+export const CardContext = createContext<CardContextType | null>(null);
 
 interface IProps {
     children: ReactElement;
@@ -59,6 +46,7 @@ export type State = {
 export default function CardProvider({ children }: IProps) {
     const [state, dispatch] = useReducer(cardReducer, initialState);
     const cardRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         if (!cardRef.current) return;
         const { width, height } = cardRef.current.getBoundingClientRect();
