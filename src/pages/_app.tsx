@@ -1,5 +1,3 @@
-// eslint-disable-next-line simple-import-sort/imports
-import '../wdyr';
 import type { AppProps } from 'next/app';
 
 import '@styles/globals.css';

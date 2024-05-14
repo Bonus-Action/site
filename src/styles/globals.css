@@ -151,13 +151,32 @@
     h3,
     h4,
     h5,
-    h6 {
+    h6,
+    .card-title {
         font-family: 'Norse', sans-serif;
         letter-spacing: 0.2rem;
         font-variant: small-caps;
         color: theme('colors.primary.DEFAULT');
         font-weight: 700;
         margin: 0 0 1rem 0;
+    }
+
+    .card-title {
+        @apply text-xl;
+        letter-spacing: 0.1rem;
+        margin: 0;
+        text-transform: capitalize;
+    }
+
+    .card-text {
+        font-size: 0.75rem;
+        font-family: 'Nunito Sans', sans;
+    }
+
+    .card-subtitle {
+        font-family: 'Nunito Sans', sans;
+        font-size: 0.75rem;
+        font-style: italic;
     }
 
     p {

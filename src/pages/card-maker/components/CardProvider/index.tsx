@@ -13,10 +13,17 @@ interface IProps {
     children: ReactElement;
 }
 
+export interface IBoundingBox {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 export type CardContextType = {
     abilities: Record<string, Ability>;
     title: GenerateCardPdfData['title'];
-    image: string;
+    image: { image: string; rotation: number } & IBoundingBox;
     onTabChange: (key: CardSide) => void;
     requiresAttunement: boolean;
     itemType: Key | null;
@@ -26,6 +33,9 @@ export type CardContextType = {
     safeBox: SafeBox;
     cardType: CardType;
     dispatch: Dispatch<CardAction>;
+    singleUse: boolean;
+    attunementClass: string;
+    subheaderDimensions: IBoundingBox;
 };
 
 export type CardSide = 'front' | 'back';
@@ -34,13 +44,16 @@ export type SafeBox = { maxX: number; maxY: number; minX: number; minY: number }
 export type State = {
     abilities: Record<string, Ability>;
     title: GenerateCardPdfData['title'];
-    image: string;
+    image: { image: string; x: number; y: number; width: number; height: number; rotation: number };
     rarity: Key | null;
     itemType: Key | null;
     requiresAttunement: boolean;
     cardSide: CardSide;
     safeBox: SafeBox;
     cardType: CardType;
+    singleUse: boolean;
+    attunementClass: string;
+    subheaderDimensions: IBoundingBox;
 };
 
 export default function CardProvider({ children }: IProps) {
@@ -54,8 +67,6 @@ export default function CardProvider({ children }: IProps) {
         dispatch({ type: 'SET_SAFE_BOX', payload: { safeBox } });
     }, []);
 
-    const { abilities, title, image, rarity, itemType, requiresAttunement, cardSide, safeBox, cardType } = state;
-
     function onTabChange(key: CardSide) {
         if (key === 'front') {
             dispatch({ type: 'FLIP_TO_FRONT' });
@@ -64,21 +75,19 @@ export default function CardProvider({ children }: IProps) {
         }
     }
 
+    // useEffect(() => {
+    //     const urlParams = new URLSearchParams();
+    //     urlParams.set('state', btoa(JSON.stringify(state)));
+    //     router.replace(`${router.pathname}?${urlParams.toString()}`);
+    // }, [state]);
+
     return (
         <CardContext.Provider
             value={{
                 cardRef,
-                cardSide,
-                abilities,
-                title,
-                image,
                 onTabChange,
-                requiresAttunement,
-                itemType,
-                rarity,
-                safeBox,
-                cardType,
                 dispatch,
+                ...state,
             }}
         >
             {children}

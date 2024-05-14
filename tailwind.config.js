@@ -26,6 +26,7 @@ module.exports = {
                     light: '#008d9c',
                 },
                 gray: '#232121',
+                'primary-color': 'var(--primary-color)',
             },
         },
         fontFamily: {

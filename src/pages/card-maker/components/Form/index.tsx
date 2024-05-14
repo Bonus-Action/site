@@ -18,7 +18,7 @@ import { useCardProvider } from '../../hooks/useCardProvider';
 import { MIN_X, MIN_Y } from '../CardProvider/cardReducer';
 
 export default function CardForm() {
-    const { onTabChange, title, requiresAttunement, dispatch } = useCardProvider();
+    const { onTabChange, title, requiresAttunement, dispatch, singleUse } = useCardProvider();
     const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
 
     async function handleCreateCard(e: FormEvent<HTMLFormElement>) {
@@ -90,30 +90,9 @@ export default function CardForm() {
                                 value={title.text}
                             />
                         </FormGroup>
-
-                        <FormGroup>
-                            <Select
-                                options={rarities.map((rarity) => ({ label: rarity, value: rarity }))}
-                                label="Rarity"
-                                placeholder="Select item rarity"
-                                onChange={(value) => dispatch({ type: 'SET_RARITY', payload: { rarity: value } })}
-                            />
-                        </FormGroup>
                     </div>
 
                     <div className="flex items-center">
-                        <FormGroup className="mr-4">
-                            <Select
-                                options={itemTypes.map((itemType) => ({
-                                    label: itemType,
-                                    value: itemType,
-                                }))}
-                                label="Item type"
-                                placeholder="Select item type"
-                                onChange={(value) => dispatch({ type: 'SET_ITEM_TYPE', payload: { itemType: value } })}
-                            />
-                        </FormGroup>
-
                         <FormGroup className="mb-0">
                             <DialogTrigger>
                                 <Button
@@ -122,11 +101,41 @@ export default function CardForm() {
                                     className="mt-3"
                                     onClick={() => setIsImagePickerOpen((open) => !open)}
                                 >
-                                    Pick image
+                                    Pick item image
+                                </Button>
+                            </DialogTrigger>
+
+                            <DialogTrigger>
+                                <Button
+                                    variant="primary-ghost"
+                                    size="small"
+                                    className="mt-3"
+                                    onClick={() => setIsImagePickerOpen((open) => !open)}
+                                >
+                                    Pick item splash
                                 </Button>
                             </DialogTrigger>
                         </FormGroup>
                     </div>
+                </TabPanel>
+                <TabPanel id="back">
+                    <FormGroup>
+                        <Select
+                            options={itemTypes.map((itemType) => ({
+                                label: itemType,
+                                value: itemType,
+                            }))}
+                            label="Item type"
+                            placeholder="Select item type"
+                            onChange={(value) => dispatch({ type: 'SET_ITEM_TYPE', payload: { itemType: value } })}
+                        />
+                        <Select
+                            options={rarities.map((rarity) => ({ label: rarity, value: rarity }))}
+                            label="Rarity"
+                            placeholder="Select item rarity"
+                            onChange={(value) => dispatch({ type: 'SET_RARITY', payload: { rarity: value } })}
+                        />
+                    </FormGroup>
 
                     <FormGroup>
                         <Checkbox
@@ -136,10 +145,20 @@ export default function CardForm() {
                                 dispatch({ type: 'SET_REQUIRES_ATTUNEMENT', payload: { requiresAttunement: value } })
                             }
                         />
+                        <Checkbox
+                            label="Single use"
+                            isSelected={singleUse}
+                            onChange={(value) => dispatch({ type: 'SET_SINGLE_USE', payload: { singleUse: value } })}
+                        />
                     </FormGroup>
                     <FormGroup className="ml-4">
                         {requiresAttunement ? (
                             <Select
+                                label="By a"
+                                placeholder="Select class"
+                                onChange={(value) =>
+                                    dispatch({ type: 'SET_ATTUNEMENT_CLASS', payload: { attunementClass: value } })
+                                }
                                 options={[
                                     { label: '-', value: '-' },
                                     ...characterClasses.map((characterClass) => ({
@@ -147,15 +166,10 @@ export default function CardForm() {
                                         value: characterClass,
                                     })),
                                 ]}
-                                label="By a"
-                                placeholder="Select class"
                             />
-                        ) : (
-                            <p>Custom</p>
-                        )}
+                        ) : null}
                     </FormGroup>
-                </TabPanel>
-                <TabPanel id="back">
+
                     <FormGroup>
                         <DynamicAbilities />
                     </FormGroup>

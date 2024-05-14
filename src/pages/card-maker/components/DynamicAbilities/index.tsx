@@ -1,7 +1,8 @@
-import { useState } from 'react';
 import { uuid } from 'uuidv4';
 
 import { Button } from '@components/Button';
+
+import { useCardProvider } from '../../hooks/useCardProvider';
 
 import DynamicAbility from './Ability';
 
@@ -11,36 +12,36 @@ export type Ability = {
     description: string;
 };
 
-interface IProps {
-    initialAbilities?: Record<string, Ability>;
-    onFocus: () => void;
-}
+export default function DynamicAbilities() {
+    const { dispatch, abilities } = useCardProvider();
 
-export default function DynamicAbilities({ initialAbilities, onFocus }: IProps) {
-    const [abilities, setAbilities] = useState<Record<string, Ability>>(initialAbilities || {});
-
+    /**
+     * Add a new ability to the card
+     */
     function handleAddAbility() {
         const id = uuid();
-        setAbilities((abilities) => ({ ...abilities, [id]: { id, title: '', description: '' } }));
+        dispatch({ type: 'ADD_ABILITY', payload: { id } });
     }
 
+    /**
+     * Update an ability on the card
+     */
     function onChange(ability: Ability) {
-        setAbilities((abilities) => ({
-            ...abilities,
-            [ability.id]: { ...ability },
-        }));
+        dispatch({ type: 'UPDATE_ABILITY', payload: ability });
     }
 
     return (
         <section className="flex flex-col">
             <div className="flex-wrap">
                 {Object.entries(abilities).map(([id, ability]) => (
-                    <DynamicAbility key={id} ability={ability} onFocus={onFocus} onChange={onChange} />
+                    <DynamicAbility key={id} ability={ability} onChange={onChange} />
                 ))}
             </div>
-            <Button variant="primary-ghost" onClick={handleAddAbility} size="small" className="self-start">
-                Add ability
-            </Button>
+            {Object.keys(abilities).length < 5 ? (
+                <Button variant="primary-ghost" onClick={handleAddAbility} size="small" className="self-start">
+                    Add ability
+                </Button>
+            ) : null}
         </section>
     );
 }

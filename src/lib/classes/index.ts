@@ -12,4 +12,4 @@ export const characterClasses = [
     'Sorcerer',
     'Warlock',
     'Wizard',
-];
+] as const;

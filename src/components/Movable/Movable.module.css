@@ -1,0 +1,12 @@
+.base:global(.rCS1w3zcxh) {
+    --moveable-color: #008d9c;
+
+    cursor: move;
+}
+
+.base:global(.rCS1w3zcxh .moveable-control.moveable-origin) {
+    border-color: #008d9c;
+}
+
+.base:global(.rCS1w3zcxh .moveable-rotation) {
+}
