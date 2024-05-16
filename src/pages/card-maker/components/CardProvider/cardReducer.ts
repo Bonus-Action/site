@@ -10,7 +10,7 @@ export type CardAction =
     | { type: 'SET_TITLE'; payload: Partial<GenerateCardPdfData['title']> }
     | {
           type: 'SET_IMAGE';
-          payload: Partial<{ image: string; rotation: number } & IBoundingBox>;
+          payload: Partial<{ src: string; image: string; rotation: number } & IBoundingBox>;
       }
     | { type: 'SET_RARITY'; payload: { rarity: Key } }
     | { type: 'SET_ITEM_TYPE'; payload: { itemType: Key } }
@@ -31,7 +31,7 @@ export const MIN_Y = 20;
 export const initialState: State = {
     abilities: {},
     title: { text: '', x: 0, y: 0, width: 0, height: 0, fontSize: 24 },
-    image: { image: '', x: 0, y: 0, width: 0, height: 0, rotation: 0 },
+    image: { image: '', x: 0, y: 0, width: 0, height: 0, rotation: 0, src: '' },
     rarity: null,
     itemType: null,
     requiresAttunement: false,

@@ -8,12 +8,18 @@ interface IProps {
     label: string;
     placeholder?: string;
     onChange?: (key: Key) => void;
+    defaultValue?: Key;
 }
 
-export default function Select({ options, label, placeholder, onChange }: IProps) {
+export default function Select({ options, label, placeholder, onChange, defaultValue }: IProps) {
     return (
         <div className="relative w-60">
-            <ReactAriaSelect placeholder={placeholder} onSelectionChange={onChange} items={options}>
+            <ReactAriaSelect
+                placeholder={placeholder}
+                onSelectionChange={onChange}
+                items={options}
+                selectedKey={defaultValue}
+            >
                 <Label>{label}</Label>
                 <Button className="flex text-base justify-between items-center w-full rounded-md border border-slate-200 bg-white px-3 py-2">
                     <SelectValue />

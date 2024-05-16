@@ -9,7 +9,7 @@ import { useCardProvider } from '../../hooks/useCardProvider';
 export function CardImage() {
     const { image, title, safeBox, cardRef, dispatch } = useCardProvider();
     const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
-    console.log(image);
+
     function handleOnDragEnd(e: OnDragEnd) {
         if (!cardRef.current) return;
 
@@ -46,7 +46,7 @@ export function CardImage() {
         dispatch({ type: 'SET_IMAGE', payload: { rotation } });
     }
 
-    return image.image ? (
+    return image.src ? (
         <Fragment>
             <Movable
                 draggable
@@ -64,7 +64,7 @@ export function CardImage() {
             <figure className="p-4">
                 <Image
                     className="relative"
-                    src={image.image}
+                    src={image.src}
                     alt={`Image for ${title.text}`}
                     width={safeBox.maxX - safeBox.minX}
                     height={safeBox.maxY - safeBox.minY}

@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, Key, useState } from 'react';
 import { DialogTrigger, Tab, TabList, TabPanel, Tabs } from 'react-aria-components';
 
 import { Button } from '@components/Button';
@@ -18,7 +18,7 @@ import { useCardProvider } from '../../hooks/useCardProvider';
 import { MIN_X, MIN_Y } from '../CardProvider/cardReducer';
 
 export default function CardForm() {
-    const { onTabChange, title, requiresAttunement, dispatch, singleUse } = useCardProvider();
+    const { onTabChange, title, requiresAttunement, dispatch, singleUse, ...state } = useCardProvider();
     const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
 
     async function handleCreateCard(e: FormEvent<HTMLFormElement>) {
@@ -37,6 +37,9 @@ export default function CardForm() {
                 height: title.height,
                 fontSize: title.fontSize,
             },
+            image: state.image,
+            subheader: state.subheaderDimensions,
+            abilities: Object.values(state.abilities),
         };
 
         const blob = await fetch('/.netlify/functions/card-maker-pdf', {
@@ -61,7 +64,7 @@ export default function CardForm() {
 
     return (
         <form onSubmit={handleCreateCard} className="flex-wrap">
-            <Tabs onSelectionChange={onTabChange}>
+            <Tabs onSelectionChange={onTabChange as ((key: Key) => void) | undefined}>
                 <TabList aria-label="Card sides" className="flex mb-4">
                     <Tab
                         id="front"
@@ -105,7 +108,7 @@ export default function CardForm() {
                                 </Button>
                             </DialogTrigger>
 
-                            <DialogTrigger>
+                            {/* <DialogTrigger>
                                 <Button
                                     variant="primary-ghost"
                                     size="small"
@@ -114,12 +117,19 @@ export default function CardForm() {
                                 >
                                     Pick item splash
                                 </Button>
-                            </DialogTrigger>
+                            </DialogTrigger> */}
                         </FormGroup>
                     </div>
                 </TabPanel>
                 <TabPanel id="back">
                     <FormGroup>
+                        <Select
+                            options={rarities.map((rarity) => ({ label: rarity, value: rarity }))}
+                            label="Rarity"
+                            placeholder="Select item rarity"
+                            onChange={(value) => dispatch({ type: 'SET_RARITY', payload: { rarity: value } })}
+                            defaultValue={state.rarity as Key}
+                        />
                         <Select
                             options={itemTypes.map((itemType) => ({
                                 label: itemType,
@@ -128,12 +138,7 @@ export default function CardForm() {
                             label="Item type"
                             placeholder="Select item type"
                             onChange={(value) => dispatch({ type: 'SET_ITEM_TYPE', payload: { itemType: value } })}
-                        />
-                        <Select
-                            options={rarities.map((rarity) => ({ label: rarity, value: rarity }))}
-                            label="Rarity"
-                            placeholder="Select item rarity"
-                            onChange={(value) => dispatch({ type: 'SET_RARITY', payload: { rarity: value } })}
+                            defaultValue={state.itemType as Key}
                         />
                     </FormGroup>
 

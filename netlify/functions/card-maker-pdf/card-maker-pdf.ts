@@ -8,16 +8,26 @@ export type GenerateCardPdfData = {
         minX: number;
         minY: number;
     };
+    image: Image;
+    subheader: BoundingBox;
+    abilities: Array<Ability>;
 };
 
-type Title = BoundingBox & { text: string };
+type Ability = {
+    id: string;
+    title: string;
+    description: string;
+};
+
+type Title = BoundingBox & { text: string; fontSize: number };
+type Image = BoundingBox & { src: string; image: string; rotation: number };
+type Subheader = BoundingBox;
 
 type BoundingBox = {
     x: number;
     y: number;
     width: number;
     height: number;
-    fontSize: number;
 };
 
 const backgroundImageBase64 =
@@ -53,13 +63,15 @@ export const handler: Handler = async (event) => {
     const cardHeight = 252; // pt
 
     const title: Title = JSON.parse(event.body).title;
+    const image: Image = JSON.parse(event.body).image;
+    const subheader: Subheader = JSON.parse(event.body).image;
     const { minX, minY } = JSON.parse(event.body).card;
 
     for (let i = 0; i < 1; i++) {
         const pageParams = { doc, i, cardWidth, cardHeight, minX, minY };
 
-        generateFront({ pageParams, title });
-        generateBack({ pageParams });
+        generateFront({ pageParams, title, image });
+        generateBack({ pageParams, title, subheader });
     }
 
     const pdfData = doc.output('arraybuffer');
@@ -78,9 +90,10 @@ export const handler: Handler = async (event) => {
 type GenerateFrontParams = {
     pageParams: PageParams;
     title: Title;
+    image: Image;
 };
 
-function generateFront({ pageParams, title }: GenerateFrontParams) {
+function generateFront({ pageParams, title, image }: GenerateFrontParams) {
     const { doc, i, cardWidth, cardHeight, minY } = pageParams;
 
     const cardX = marginX + i * cardWidth;
@@ -93,10 +106,24 @@ function generateFront({ pageParams, title }: GenerateFrontParams) {
     doc.setFont('Norse', 'Normal')
         .setFontSize(pixelsToPoints(title.fontSize))
         .text(title.text, textX, textY, { maxWidth: pixelsToPoints(title.width) });
+
+    doc.addImage(
+        image.src,
+        'PNG',
+        pixelsToPoints(image.x) + cardX,
+        pixelsToPoints(image.y) + marginY,
+        pixelsToPoints(image.width),
+        pixelsToPoints(image.height),
+        undefined,
+        undefined,
+        image.rotation,
+    );
 }
 
 type GenerateBackParams = {
     pageParams: PageParams;
+    title: Title;
+    subheader: Subheader;
 };
 
 type PageParams = {
@@ -108,9 +135,18 @@ type PageParams = {
     minY: number;
 };
 
-function generateBack({ pageParams }: GenerateBackParams) {
-    const { doc, cardWidth, cardHeight } = pageParams;
+function generateBack({ pageParams, title }: GenerateBackParams) {
+    const { doc, i, cardWidth, cardHeight, minY } = pageParams;
     doc.addImage(backgroundImageBase64, 'JPEG', marginX + cardWidth, marginY, cardWidth, cardHeight);
+
+    const cardX = marginX + (i + 1) * cardWidth;
+
+    const textX = pixelsToPoints(title.x) + cardX;
+    const textY = pixelsToPoints(title.y) + marginY + pixelsToPoints(minY);
+
+    doc.setFont('Norse', 'Normal')
+        .setFontSize(pixelsToPoints(title.fontSize))
+        .text(title.text, textX, textY, { maxWidth: pixelsToPoints(title.width) });
 }
 
 function pixelsToPoints(pixels: number) {

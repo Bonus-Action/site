@@ -165,7 +165,6 @@
         @apply text-xl;
         letter-spacing: 0.1rem;
         margin: 0;
-        text-transform: capitalize;
     }
 
     .card-text {

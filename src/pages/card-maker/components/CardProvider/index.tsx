@@ -23,7 +23,7 @@ export interface IBoundingBox {
 export type CardContextType = {
     abilities: Record<string, Ability>;
     title: GenerateCardPdfData['title'];
-    image: { image: string; rotation: number } & IBoundingBox;
+    image: { src: string; rotation: number; image: string } & IBoundingBox;
     onTabChange: (key: CardSide) => void;
     requiresAttunement: boolean;
     itemType: Key | null;
@@ -44,7 +44,7 @@ export type SafeBox = { maxX: number; maxY: number; minX: number; minY: number }
 export type State = {
     abilities: Record<string, Ability>;
     title: GenerateCardPdfData['title'];
-    image: { image: string; x: number; y: number; width: number; height: number; rotation: number };
+    image: { src: string; x: number; y: number; width: number; height: number; rotation: number; image: string };
     rarity: Key | null;
     itemType: Key | null;
     requiresAttunement: boolean;
