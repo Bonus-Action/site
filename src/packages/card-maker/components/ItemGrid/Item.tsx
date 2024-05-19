@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import Image from 'next/image';
 
-import { useCardProvider } from '../../hooks/useCardProvider';
+import useCardProvider from '../../hooks/useCardProvider';
 
 interface IProps {
     item: ItemType;

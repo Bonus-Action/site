@@ -1,17 +1,15 @@
 import { Fragment } from 'react';
 
-import { CardAbilities } from '../CardAbilities';
 import CardBackground from '../CardBackground';
-import { CardSubHeader } from '../CardSubHeader';
+import CardImage from '../CardImage';
 import CardTitle from '../CardTitle';
 
-export default function CardBack() {
+export default function CardFront() {
     return (
         <Fragment>
             <CardBackground />
             <CardTitle />
-            <CardSubHeader />
-            <CardAbilities />
+            <CardImage />
         </Fragment>
     );
 }

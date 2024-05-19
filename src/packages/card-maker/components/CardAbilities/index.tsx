@@ -1,8 +1,8 @@
-import { useCardProvider } from '../../hooks/useCardProvider';
+import useCardProvider from '../../hooks/useCardProvider';
 
-import { CardAbilitiesAbility } from './Ability';
+import CardAbilitiesAbility from './Ability';
 
-export function CardAbilities() {
+export default function CardAbilities() {
     const { abilities, safeBox, subheaderDimensions } = useCardProvider();
 
     return (

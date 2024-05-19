@@ -1,8 +1,7 @@
 import { ReactElement } from 'react';
 
-import { CardSide } from '@pages/card-maker/components/CardProvider';
-
 import { classNames } from '../../lib/classNames';
+import { CardSide } from '../../packages/card-maker/components/CardProvider';
 
 interface IProps {
     cardSide?: CardSide;

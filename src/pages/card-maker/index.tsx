@@ -1,10 +1,9 @@
+import CardBack from '@card-maker/components/CardBack';
+import CardFront from '@card-maker/components/CardFront';
+import CardProvider from '@card-maker/components/CardProvider';
+import CardForm from '@card-maker/components/Form';
+import useCardProvider from '@card-maker/hooks/useCardProvider';
 import FlipCard from '@components/FlipCard';
-
-import CardBack from './components/CardBack';
-import CardFront from './components/CardFront';
-import CardProvider from './components/CardProvider';
-import CardForm from './components/Form';
-import { useCardProvider } from './hooks/useCardProvider';
 
 function CardMakerPageInner() {
     const { cardSide, cardRef, cardType } = useCardProvider();

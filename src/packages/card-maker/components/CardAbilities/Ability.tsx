@@ -6,7 +6,8 @@ interface IProps {
     id: string;
     ability: Ability;
 }
-export function CardAbilitiesAbility({ id, ability }: IProps) {
+
+export default function CardAbilitiesAbility({ id, ability }: IProps) {
     const ref = useRef<HTMLParagraphElement>(null);
 
     return (

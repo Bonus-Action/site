@@ -43,7 +43,7 @@ export const initialState: State = {
     subheaderDimensions: { x: 0, y: 0, width: 0, height: 0 },
 };
 
-export function cardReducer(state: State, action: CardAction): State {
+export default function cardReducer(state: State, action: CardAction): State {
     switch (action.type) {
         case 'SET_RARITY':
         case 'SET_ITEM_TYPE':

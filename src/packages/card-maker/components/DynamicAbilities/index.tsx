@@ -2,7 +2,7 @@ import { uuid } from 'uuidv4';
 
 import { Button } from '@components/Button';
 
-import { useCardProvider } from '../../hooks/useCardProvider';
+import useCardProvider from '../../hooks/useCardProvider';
 
 import DynamicAbility from './Ability';
 

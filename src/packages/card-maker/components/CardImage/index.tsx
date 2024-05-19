@@ -4,9 +4,9 @@ import { OnDragEnd, OnResizeEnd, OnRotateEnd } from 'react-moveable';
 
 import { Movable } from '@components/Movable';
 
-import { useCardProvider } from '../../hooks/useCardProvider';
+import useCardProvider from '../../hooks/useCardProvider';
 
-export function CardImage() {
+export default function CardImage() {
     const { image, title, safeBox, cardRef, dispatch } = useCardProvider();
     const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
 

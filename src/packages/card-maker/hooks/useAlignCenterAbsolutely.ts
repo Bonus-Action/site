@@ -8,7 +8,11 @@ interface UseAlignCenterAbsolutelyProps {
     onDependencyChange?: (params: OnDependencyChangeParams) => void;
 }
 
-export function useAlignCenterAbsolutely({ ref, dependencies, onDependencyChange }: UseAlignCenterAbsolutelyProps) {
+export default function useAlignCenterAbsolutely({
+    ref,
+    dependencies,
+    onDependencyChange,
+}: UseAlignCenterAbsolutelyProps) {
     const [width, setWidth] = useState(0);
 
     function handleDependencyChange() {
@@ -28,6 +32,7 @@ export function useAlignCenterAbsolutely({ ref, dependencies, onDependencyChange
 
     useEffect(() => {
         handleDependencyChange();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [...dependencies]);
 
     return {

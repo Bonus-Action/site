@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { CardContext } from '../components/CardProvider';
 
-export function useCardProvider() {
+export default function useCardProvider() {
     const context = useContext(CardContext);
 
     if (!context) {

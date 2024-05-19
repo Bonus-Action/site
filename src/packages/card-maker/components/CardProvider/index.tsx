@@ -1,11 +1,10 @@
 import { createContext, Dispatch, Key, ReactElement, useEffect, useReducer, useRef } from 'react';
 
-import { Ability } from '@pages/card-maker/components/DynamicAbilities';
-
 import { GenerateCardPdfData } from '../../../../../netlify/functions/card-maker-pdf/card-maker-pdf';
 import { CardType } from '../../../../components/FlipCard';
+import { Ability } from '../DynamicAbilities';
 
-import { CardAction, cardReducer, initialState, MIN_X, MIN_Y } from './cardReducer';
+import cardReducer, { CardAction, initialState, MIN_X, MIN_Y } from './cardReducer';
 
 export const CardContext = createContext<CardContextType | null>(null);
 

@@ -7,15 +7,15 @@ import FormGroup from '@components/FormGroup';
 import Input from '@components/Input';
 import Modal from '@components/Modal';
 import Select from '@components/Select';
-import DynamicAbilities from '@pages/card-maker/components/DynamicAbilities';
-import ItemGrid from '@pages/card-maker/components/ItemGrid';
 
 import { GenerateCardPdfData } from '../../../../../netlify/functions/card-maker-pdf/card-maker-pdf';
 import { itemTypes, rarities } from '../../../../lib/cardItemTypes';
 import { characterClasses } from '../../../../lib/classes';
 import { classNames } from '../../../../lib/classNames';
-import { useCardProvider } from '../../hooks/useCardProvider';
+import useCardProvider from '../../hooks/useCardProvider';
 import { MIN_X, MIN_Y } from '../CardProvider/cardReducer';
+import DynamicAbilities from '../DynamicAbilities';
+import ItemGrid from '../ItemGrid';
 
 export default function CardForm() {
     const { onTabChange, title, requiresAttunement, dispatch, singleUse, ...state } = useCardProvider();

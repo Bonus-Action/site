@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 
-import { OnDependencyChangeParams, useAlignCenterAbsolutely } from '../../hooks/useAlignCenterAbsolutely';
-import { useCardProvider } from '../../hooks/useCardProvider';
+import useAlignCenterAbsolutely, { OnDependencyChangeParams } from '../../hooks/useAlignCenterAbsolutely';
+import useCardProvider from '../../hooks/useCardProvider';
 
 export default function CardTitle() {
     const ref = useRef<HTMLDivElement>(null);
