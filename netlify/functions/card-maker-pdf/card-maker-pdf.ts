@@ -12,10 +12,7 @@ import {
 
 export type GenerateCardPdfData = {
     title: Title;
-    card: {
-        minX: number;
-        minY: number;
-    };
+    card: { minX: number; minY: number };
     image: Image;
     subheader: Subheader;
     abilities: Array<Ability>;
@@ -70,8 +67,8 @@ export const handler: Handler = async (event) => {
     doc.addFileToVFS('NunitoSansBold.ttf', nunitoSansBoldFont);
     doc.addFont('NunitoSansBold.ttf', 'NunitoSans', 'Bold');
 
-    const cardWidth = 180; // pt
-    const cardHeight = 252; // pt
+    const cardWidth = 180; // pt TODO: get this from card config
+    const cardHeight = 252; // pt TODO: get this from card config
 
     const title: Title = JSON.parse(event.body).title;
     const image: Image = JSON.parse(event.body).image;
@@ -79,7 +76,7 @@ export const handler: Handler = async (event) => {
     const abilities: Array<Ability> = JSON.parse(event.body).abilities;
 
     const { minX, minY } = JSON.parse(event.body).card;
-    console.log({ abilities });
+
     for (let i = 0; i < 1; i++) {
         const pageParams = { doc, i, cardWidth, cardHeight, minX, minY };
 
@@ -106,6 +103,9 @@ type GenerateFrontParams = {
     image: Image;
 };
 
+/**
+ * Generate the front of the card
+ */
 function generateFront({ pageParams, title, image }: GenerateFrontParams) {
     const { doc, i, cardWidth, cardHeight, minY } = pageParams;
 
@@ -148,6 +148,9 @@ type PageParams = {
     minY: number;
 };
 
+/**
+ * Generate the back of the card
+ */
 function generateBack({ pageParams, title, subheader, abilities }: GenerateBackParams) {
     const { doc, i, cardWidth, cardHeight, minY, minX } = pageParams;
     doc.addImage(backgroundImageBase64, 'JPEG', marginX + cardWidth, marginY, cardWidth, cardHeight);
@@ -185,10 +188,17 @@ function generateBack({ pageParams, title, subheader, abilities }: GenerateBackP
     generateAbilities(doc, abilitiesX, abilitiesY, abilities);
 }
 
+/**
+ * Because web works in pixels and pixel density works differently in print, we need to convert pixels to points
+ * to get the correct size in the PDF.
+ */
 function pixelsToPoints(pixels: number) {
     return Math.round(pixels * 0.75);
 }
 
+/**
+ * Generate the subheader text for the back of the card
+ */
 function generateSubheaderText(subheader: Subheader) {
     const text = { firstLine: '', secondLine: '' };
 
@@ -200,6 +210,9 @@ function generateSubheaderText(subheader: Subheader) {
     return text;
 }
 
+/**
+ * Generate the abilities for the back of the card
+ */
 function generateAbilities(doc: jsPDF, abilitiesX: number, abilitiesY: number, abilities: Array<Ability>) {
     let x = abilitiesX;
     let y = abilitiesY;
@@ -225,6 +238,9 @@ function generateAbilities(doc: jsPDF, abilitiesX: number, abilitiesY: number, a
     }
 }
 
+/**
+ * Draw 'faux' small caps text
+ */
 function drawSmallCaps(doc: jsPDF, text: string, x: number, y: number, fontSize: number, smallCapsScale = 0.7) {
     const words = text.split(' ');
 
@@ -263,6 +279,9 @@ function drawSmallCaps(doc: jsPDF, text: string, x: number, y: number, fontSize:
     doc.setFontSize(fontSize);
 }
 
+/**
+ * Get the coordinates of the last character in a string
+ */
 function getLastCharCoordinates(doc: jsPDF, text: string, startX: number, startY: number) {
     const textWidth = doc.getTextDimensions(text).w;
     return { x: startX + textWidth, y: startY };
