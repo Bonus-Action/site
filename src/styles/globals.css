@@ -146,6 +146,16 @@
 }
 
 @layer base {
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
     h1,
     h2,
     h3,
@@ -174,7 +184,7 @@
 
     .card-subtitle {
         font-family: 'Nunito Sans', sans;
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         font-style: italic;
     }
 

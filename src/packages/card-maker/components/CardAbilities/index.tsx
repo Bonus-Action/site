@@ -7,9 +7,9 @@ export default function CardAbilities() {
 
     return (
         <div
-            className="absolute break-words card-text leading-tight"
+            className="absolute break-words card-text leading-tight flex flex-col gap-1"
             style={{
-                top: subheaderDimensions.y + subheaderDimensions.height,
+                top: subheaderDimensions.y + subheaderDimensions.height + 10,
                 left: safeBox.minX,
                 width: safeBox.maxX - safeBox.minX,
             }}

@@ -6,12 +6,13 @@ import useCardProvider from '../../hooks/useCardProvider';
 interface IProps {
     item: ItemType;
     onClose: () => void;
+    i: number;
 }
 
 export type ItemType = { imageUrl: string; title: string };
 
-export default function Item({ item, onClose }: IProps) {
-    const { dispatch } = useCardProvider();
+export default function Item({ i, item, onClose }: IProps) {
+    const { dispatch, image } = useCardProvider();
     const [isLoaded, setIsLoaded] = useState(false);
     const ref = useRef<HTMLImageElement>(null);
 
@@ -26,10 +27,16 @@ export default function Item({ item, onClose }: IProps) {
 
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = ref.current?.width || 0;
-        canvas.height = ref.current?.height || 0;
 
-        ctx?.drawImage(ref.current, 0, 0);
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        if (ctx) {
+            ctx.canvas.width = image.width;
+            ctx.canvas.height = image.height;
+            ctx.drawImage(ref.current, 0, 0, image.width, image.height);
+        }
+
         const base64Image = canvas.toDataURL('image/png');
         dispatch({ type: 'SET_IMAGE', payload: { image: base64Image } });
     }
@@ -47,7 +54,13 @@ export default function Item({ item, onClose }: IProps) {
                     height={100}
                     onLoad={() => setIsLoaded(true)}
                 />
-                {!isLoaded ? <p>Loading</p> : <p className="mb-0 text-sm">{item.title}</p>}
+                {!isLoaded ? (
+                    <p>Loading</p>
+                ) : (
+                    <p className="mb-0 text-sm">
+                        {item.title} {i + 1}
+                    </p>
+                )}
             </button>
         </div>
     );

@@ -61,16 +61,14 @@ export default function CardImage() {
                 onResizeEnd={handleOnResizeEnd}
                 onRotateEnd={handleOnRotateEnd}
             />
-            <figure className="p-4">
-                <Image
-                    className="relative"
-                    src={image.src}
-                    alt={`Image for ${title.text}`}
-                    width={safeBox.maxX - safeBox.minX}
-                    height={safeBox.maxY - safeBox.minY}
-                    ref={setContainerRef}
-                />
-            </figure>
+            <Image
+                className="relative"
+                src={image.src}
+                alt={`Image for ${title.text}`}
+                width={safeBox.maxX - safeBox.minX}
+                height={safeBox.maxY - safeBox.minY}
+                ref={setContainerRef}
+            />
         </Fragment>
     ) : null;
 }

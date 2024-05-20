@@ -4,7 +4,7 @@ import { Button } from '../../../../components/Button';
 
 import Item, { ItemType } from './Item';
 
-const items: Array<ItemType> = Array(200).fill({ imageUrl: '/img/card-maker/item.png', title: 'Item' });
+const items: Array<ItemType> = Array(679).fill({ imageUrl: '/img/card-maker/item.png', title: 'Item' });
 
 interface IProps {
     close: () => void;
@@ -25,7 +25,7 @@ export default function ItemGrid({ close }: IProps) {
             </div>
             <section className="grid grid-cols-8 overflow-scroll">
                 {items.map((item, i) => (
-                    <Item key={i} item={item} onClose={close} />
+                    <Item key={i} item={item} onClose={close} i={i} />
                 ))}
             </section>
         </Fragment>

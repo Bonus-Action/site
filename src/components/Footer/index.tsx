@@ -4,7 +4,7 @@ import SocialButtons from '@components/SocialButtons';
 
 export function Footer() {
     return (
-        <footer className="flex bg-gray py-16 text-white">
+        <footer className="flex bg-gray py-16 text-white mt-auto">
             <div className="container mx-auto flex">
                 <div className="flex w-1/4 flex-col">
                     <p className="uppercase font-semibold text-md">More</p>

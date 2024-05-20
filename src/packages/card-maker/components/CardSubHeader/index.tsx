@@ -2,8 +2,7 @@ import { useRef } from 'react';
 
 import useAlignCenterAbsolutely, { OnDependencyChangeParams } from '../../hooks/useAlignCenterAbsolutely';
 import useCardProvider from '../../hooks/useCardProvider';
-
-const anNouns = ['Artificer'];
+import { getAttunementString } from '../../lib/getAttunementString';
 
 export default function CardSubHeader() {
     const ref = useRef<HTMLDivElement>(null);
@@ -51,14 +50,7 @@ export default function CardSubHeader() {
             {rarity ? <span>{rarity} </span> : null}
             {itemType ? <span>{itemType}</span> : null}
             <p className="mb-0">
-                {requiresAttunement ? (
-                    <span>
-                        Requires Attunement
-                        {attunementClass && attunementClass !== '-'
-                            ? ` by ${anNouns.includes(attunementClass) ? 'an' : 'a'} ${attunementClass}`
-                            : null}
-                    </span>
-                ) : null}
+                {requiresAttunement ? <span>{getAttunementString(requiresAttunement, attunementClass)}</span> : null}
                 {singleUse ? <span>Single Use</span> : null}
             </p>
         </div>

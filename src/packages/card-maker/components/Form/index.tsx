@@ -13,7 +13,7 @@ import { itemTypes, rarities } from '../../../../lib/cardItemTypes';
 import { characterClasses } from '../../../../lib/classes';
 import { classNames } from '../../../../lib/classNames';
 import useCardProvider from '../../hooks/useCardProvider';
-import { MIN_X, MIN_Y } from '../CardProvider/cardReducer';
+import { getAttunementString } from '../../lib/getAttunementString';
 import DynamicAbilities from '../DynamicAbilities';
 import ItemGrid from '../ItemGrid';
 
@@ -25,21 +25,17 @@ export default function CardForm() {
         e.preventDefault();
 
         const data: GenerateCardPdfData = {
-            card: {
-                minX: MIN_X,
-                minY: MIN_Y,
-            },
-            title: {
-                text: title.text,
-                x: title.x,
-                y: title.y,
-                width: title.width,
-                height: title.height,
-                fontSize: title.fontSize,
-            },
+            card: { minX: state.safeBox.minX, minY: state.safeBox.minY },
             image: state.image,
-            subheader: state.subheaderDimensions,
+            subheader: {
+                ...state.subheaderDimensions,
+                singleUse,
+                attunement: getAttunementString(requiresAttunement, state.attunementClass),
+                itemType: (state.itemType as string) ?? undefined,
+                rarity: (state.rarity as string) ?? undefined,
+            },
             abilities: Object.values(state.abilities),
+            title,
         };
 
         const blob = await fetch('/.netlify/functions/card-maker-pdf', {
@@ -161,6 +157,7 @@ export default function CardForm() {
                             <Select
                                 label="By a"
                                 placeholder="Select class"
+                                defaultValue={state.attunementClass}
                                 onChange={(value) =>
                                     dispatch({ type: 'SET_ATTUNEMENT_CLASS', payload: { attunementClass: value } })
                                 }

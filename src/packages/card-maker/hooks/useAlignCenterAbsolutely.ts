@@ -23,10 +23,10 @@ export default function useAlignCenterAbsolutely({
 
         const x = parseInt(match?.[1] || '0', 10);
         const y = parseInt(ref.current.style.top, 10);
-        const width = parseInt(ref.current.style.width, 10);
+        const width = ref.current.getBoundingClientRect().width;
         const height = ref.current.getBoundingClientRect().height;
 
-        setWidth(ref.current.getBoundingClientRect().width);
+        setWidth(width);
         onDependencyChange?.({ x, y, width, height });
     }
 
