@@ -2,7 +2,13 @@ import { jsPDF } from 'jspdf';
 
 import { Handler } from '@netlify/functions';
 
-import { backgroundImageBase64, norseFont, nunitoSansItalicFont, nunitoSansNormalFont } from './utils';
+import {
+    backgroundImageBase64,
+    norseFont,
+    nunitoSansBoldFont,
+    nunitoSansItalicFont,
+    nunitoSansNormalFont,
+} from './utils';
 
 export type GenerateCardPdfData = {
     title: Title;
@@ -61,7 +67,7 @@ export const handler: Handler = async (event) => {
     doc.addFileToVFS('NunitoSansNormal.ttf', nunitoSansNormalFont);
     doc.addFont('NunitoSansNormal.ttf', 'NunitoSans', 'Normal');
 
-    doc.addFileToVFS('NunitoSansBold.ttf', nunitoSansNormalFont);
+    doc.addFileToVFS('NunitoSansBold.ttf', nunitoSansBoldFont);
     doc.addFont('NunitoSansBold.ttf', 'NunitoSans', 'Bold');
 
     const cardWidth = 180; // pt
